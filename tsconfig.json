@@ -30,12 +30,12 @@
       "@app/*": [
         "src/*"
       ],
-      "assets/*": [
-        "assets/*"
-      ],
       "@icons": [
         "src/components/icons"
-      ]
+      ],
+      "@hooks": [
+        "src/hooks/"
+      ],
     },
     "typeRoots": [
       "./types",
