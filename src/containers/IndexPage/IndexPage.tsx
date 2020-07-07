@@ -1,85 +1,89 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Input, Pagination } from 'antd'
-import { format } from 'date-fns'
+import { useDebounce } from '@hooks'
+import { Input, Pagination } from 'antd'
+import { useRouter } from 'next/router'
+import { parse, stringify } from 'qs'
 import styled from 'styled-components'
 import useSWR from 'swr'
 
+import { Card, SkeletonCard } from './Card'
 import { IResponse } from './types'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
+const perPage = 4
+const skeletonsIds = new Array(perPage).fill(null).map((_, index) => index)
+
 export const IndexPage = () => {
-  const [page, setPage] = useState(1)
-  const [inputValue, setInputValue] = useState('')
+  const router = useRouter()
+  const query = parse(router.asPath.slice(2, router.asPath.length))
+
+  const [page, setPage] = useState(Number(query.page) || 1)
+  const [inputValue, setInputValue] = useState(
+    (query.debouncedValue as string) || '',
+  )
+
+  const debouncedValue = useDebounce(inputValue, 500)
 
   const { data, mutate, isValidating } = useSWR<IResponse>(
-    `https://api.github.com/search/repositories?q=${inputValue}&limit=10&page=${page}&per_page=4`,
+    () =>
+      debouncedValue
+        ? `https://api.github.com/search/repositories?q=${debouncedValue}&page=${page}&per_page=${perPage}`
+        : null,
     fetcher,
     {
-      revalidateOnMount: false,
       revalidateOnFocus: false,
     },
   )
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    mutate()
-  }
-
-  console.log(data, isValidating, page)
-
-  // useEffect(() => {
-  //   mutate()
-  // }, [page])
+  useEffect(() => {
+    const query = stringify({ page, debouncedValue }, { skipNulls: true })
+    router.push(`${router.pathname}?${query}`)
+  }, [page, debouncedValue])
 
   return (
     <Container>
-      <SearchSection onSubmit={onSubmit}>
-        <Input
-          placeholder="Type repository name"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          disabled={isValidating}
-        />
-
-        <Button htmlType="submit" disabled={isValidating || !inputValue.length}>
-          Search
-        </Button>
-      </SearchSection>
+      <Input
+        placeholder="Type repository name"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        disabled={isValidating}
+      />
 
       <ItemsContainer>
         <Items>
           {data && data.items && (
             <Cards>
-              {data.items.map(
-                ({ id, name, stargazers_count, updated_at, html_url }) => (
-                  <Card key={id} title={<a href="#">{name}</a>}>
-                    <CardContent>
-                      <b>{`${stargazers_count} stars`}</b>
-                      <div>{`Last update: ${format(
-                        new Date(updated_at),
-                        'd MMM yyyy',
-                      )}`}</div>
-                      <a href={html_url} target="_blank">
-                        Ссылка на репозиторий
-                      </a>
-                    </CardContent>
-                  </Card>
-                ),
-              )}
+              {data.items.map((item) => (
+                <Card key={item.id} {...item} />
+              ))}
             </Cards>
           )}
 
-          <PagintaionContaner>
-            <Pagination
-              current={page}
-              total={50}
-              onChange={(page) => {
-                setPage(page)
-                mutate()
-              }}
-            />
-          </PagintaionContaner>
+          {isValidating && (
+            <Cards>
+              {skeletonsIds.map((id) => (
+                <SkeletonCard key={id} />
+              ))}
+            </Cards>
+          )}
+
+          {(data || isValidating) && (
+            <PagintaionContaner>
+              <Pagination
+                current={page}
+                total={
+                  data && Math.ceil(data.total_count / perPage) < 5
+                    ? Math.ceil(data.total_count / perPage) * 10
+                    : 50
+                }
+                onChange={(page) => {
+                  setPage(page)
+                  mutate()
+                }}
+              />
+            </PagintaionContaner>
+          )}
         </Items>
       </ItemsContainer>
     </Container>
@@ -88,12 +92,6 @@ export const IndexPage = () => {
 
 const Container = styled.div`
   padding: 120px 60px;
-`
-
-const SearchSection = styled.form`
-  display: grid;
-  grid-template-columns: 1fr min-content;
-  gap: 0 8px;
 `
 
 const ItemsContainer = styled.div`
@@ -111,11 +109,6 @@ const Cards = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-`
-
-const CardContent = styled.div`
-  display: grid;
-  gap: 12px 0;
 `
 
 const PagintaionContaner = styled.div`
