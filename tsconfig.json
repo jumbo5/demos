@@ -34,11 +34,14 @@
         "src/components/icons"
       ],
       "@components": [
-        "src/components"
+        "src/components/"
       ],
       "@hooks": [
         "src/hooks/"
       ],
+      "@utils": [
+        "src/utils/"
+      ]
     },
     "typeRoots": [
       "./types",

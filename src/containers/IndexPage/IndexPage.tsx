@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDebounce } from '@hooks'
+import { fetcher } from '@utils'
 import { Input, Pagination } from 'antd'
 import { useRouter } from 'next/router'
 import { parse, stringify } from 'qs'
@@ -8,8 +9,6 @@ import useSWR from 'swr'
 
 import { Card, SkeletonCard } from './Card'
 import { IResponse } from './types'
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const perPage = 4
 const skeletonsIds = new Array(perPage).fill(null).map((_, index) => index)
@@ -37,12 +36,13 @@ export const IndexPage = () => {
   )
 
   useEffect(() => {
-    const query = stringify({ page, debouncedValue }, { skipNulls: true })
+    const query = stringify({ page, debouncedValue })
+
     router.push(`${router.pathname}?${query}`)
   }, [page, debouncedValue])
 
   return (
-    <Container>
+    <>
       <Input
         placeholder="Type repository name"
         value={inputValue}
@@ -86,7 +86,7 @@ export const IndexPage = () => {
           )}
         </Items>
       </ItemsContainer>
-    </Container>
+    </>
   )
 }
 

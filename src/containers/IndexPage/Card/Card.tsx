@@ -1,18 +1,25 @@
 import React from 'react'
-import { Card as AntCard, Skeleton } from 'antd'
+import { Card as AntCard } from 'antd'
 import { format } from 'date-fns'
-import styled from 'styled-components'
+import Link from 'next/link'
 
 import { CardContent } from './Card.styles'
 import { IResponseItem } from '../types'
 
 export const Card: React.FC<IResponseItem> = ({
+  id,
   name,
   stargazers_count,
   updated_at,
   html_url,
 }) => (
-  <AntCard title={<a href="#">{name}</a>}>
+  <AntCard
+    title={
+      <Link href={`/repository/${id}`} as={`/repository/${id}`}>
+        <a>{name}</a>
+      </Link>
+    }
+  >
     <CardContent>
       <b>{`${stargazers_count} stars`}</b>
       <div>{`Updated at: ${format(new Date(updated_at), 'd MMM yyyy')}`}</div>
@@ -22,18 +29,3 @@ export const Card: React.FC<IResponseItem> = ({
     </CardContent>
   </AntCard>
 )
-
-const StyledSkeleton = styled(Skeleton)`
-  .ant-skeleton-title {
-    margin: 0;
-  }
-
-  .ant-skeleton-title + .ant-skeleton-paragraph {
-    margin-top: 0;
-    margin-bottom: 0;
-
-    li:first-child {
-      margin-top: 16px;
-    }
-  }
-`
