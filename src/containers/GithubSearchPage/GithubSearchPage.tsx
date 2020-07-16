@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDebounce } from '@hooks'
 import { fetcher } from '@utils'
 import { Input, Pagination } from 'antd'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { parse, stringify } from 'qs'
 import styled from 'styled-components'
@@ -43,6 +44,11 @@ export const GithubSearchPage = () => {
 
   return (
     <>
+      <NextSeo
+        title="Github search"
+        description="React Github search example"
+      />
+
       <Input
         placeholder="Type repository name"
         value={inputValue}

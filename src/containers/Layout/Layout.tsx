@@ -7,13 +7,14 @@ import styled from 'styled-components'
 import { menuLinks } from './links'
 
 export const Layout: React.FC = ({ children }) => {
-  const router = useRouter()
-  const [selectedKeys, setSelectedKeys] = useState([router.pathname])
-  const [collapsed, setCollapsed] = useState(router.pathname !== '/')
+  const { pathname } = useRouter()
+  const [selectedKeys, setSelectedKeys] = useState([pathname])
+  const [collapsed, setCollapsed] = useState(true)
 
   useEffect(() => {
-    setSelectedKeys([router.pathname])
-  }, [router.pathname])
+    setSelectedKeys([pathname])
+    setCollapsed(pathname !== '/')
+  }, [pathname])
 
   return (
     <Container>
