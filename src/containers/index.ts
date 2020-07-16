@@ -1,5 +1,6 @@
-export * from './IndexPage/IndexPage'
+export * from './GithubSearchPage/GithubSearchPage'
 export * from './RepositoryPage/RepositoryPage'
 export * from './RepositoryPage/types'
 export * from './Layout/Layout'
 export * from './NotFoundPage/NotFoundPage'
+export * from './IndexPage/IndexPage'
