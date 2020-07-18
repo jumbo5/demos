@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDebounce } from '@hooks'
-import { fetcher } from '@utils'
+import { fetcher, getQuery } from '@utils'
 import { Input, Pagination } from 'antd'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
@@ -16,7 +16,7 @@ const skeletonsIds = new Array(perPage).fill(null).map((_, index) => index)
 
 export const GithubSearchPage = () => {
   const router = useRouter()
-  const query = parse(router.asPath.slice(2, router.asPath.length))
+  const query = parse(getQuery(router.asPath))
 
   const [page, setPage] = useState(Number(query.page) || 1)
   const [inputValue, setInputValue] = useState(
