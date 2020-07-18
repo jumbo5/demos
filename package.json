@@ -9,8 +9,7 @@
     "start:prod": "next start -p 80",
     "lint": "eslint --ext .ts,.tsx --fix \"src/**/*\"",
     "lint:icons": "eslint --ext .ts,.tsx \"src/components/icons/**/*\" --fix",
-    "generate-icons": "rimraf src/components/icons && svgr --config-file ./config/svgr/config.js --typescript --ignore-existing -d src/components/icons assets/icons && npm run lint:icons",
-    "predeploy": "npm run build"
+    "generate-icons": "rimraf src/components/icons && svgr --config-file ./config/svgr/config.js --typescript --ignore-existing -d src/components/icons assets/icons && npm run lint:icons"
   },
   "author": "Remy Sharp <remy@leftlogic.com>",
   "dependencies": {
