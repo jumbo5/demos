@@ -18,6 +18,10 @@ const AudioContainer = () => {
         onTimeChange={(time) => handleChangeTrack({ time })}
         volume={track?.volume}
         onVolumeChange={(volume) => handleChangeTrack({ volume })}
+        paused={track?.paused}
+        onPausedChange={(paused) => handleChangeTrack({ paused })}
+        muted={track?.muted}
+        onMutedChange={(muted) => handleChangeTrack({ muted })}
       />
     </Container>
   )
