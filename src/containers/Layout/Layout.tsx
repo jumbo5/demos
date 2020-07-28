@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from 'react'
 import { Layout as AntLayout, Menu } from 'antd'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import { menuLinks } from './links'
 
+const AudioContainer = dynamic(() => import('./AudioContainer'), {
+  ssr: false,
+})
+
 export const Layout: React.FC = ({ children }) => {
   const { pathname } = useRouter()
   const [selectedKeys, setSelectedKeys] = useState([pathname])
-  const [collapsed, setCollapsed] = useState(true)
 
   useEffect(() => {
     setSelectedKeys([pathname])
-    setCollapsed(pathname !== '/')
   }, [pathname])
 
   return (
     <Container>
-      <AntLayout.Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={() => setCollapsed(!collapsed)}
-      >
-        <Menu selectable selectedKeys={selectedKeys} theme="dark" mode="inline">
+      <AntLayout.Header style={{ position: 'fixed', zIndex: 9, width: '100%' }}>
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          selectable
+          selectedKeys={selectedKeys}
+        >
           {menuLinks.map(({ link, text, Icon }) => (
             <Menu.Item key={link} icon={<Icon />}>
               <Link href={link}>
@@ -32,8 +36,12 @@ export const Layout: React.FC = ({ children }) => {
             </Menu.Item>
           ))}
         </Menu>
-      </AntLayout.Sider>
-      <ChildrenWrapper>{children}</ChildrenWrapper>
+      </AntLayout.Header>
+
+      <ChildrenWrapper>
+        {children}
+        <AudioContainer />
+      </ChildrenWrapper>
     </Container>
   )
 }
@@ -43,6 +51,7 @@ const Container = styled(AntLayout)`
 `
 
 const ChildrenWrapper = styled.div`
+  position: relative;
   width: 100%;
-  padding: 36px 48px;
+  padding: 100px 50px;
 `
