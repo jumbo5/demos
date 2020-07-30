@@ -176,7 +176,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr 100px;
   gap: 0 16px;
-  background-color: rgba(0, 0, 0, 0.01);
+  background-color: #ebeff2;
   padding: 8px 12px;
 `
 

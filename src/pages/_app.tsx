@@ -1,6 +1,6 @@
 import React from 'react'
-import { createStore } from '@reatom/core'
 import { context } from '@reatom/react'
+import { store } from '@store'
 import { AppInitialProps, AppProps } from 'next/app'
 
 import { Layout } from '@app/containers'
@@ -12,8 +12,6 @@ const Application = ({
   router,
   pageProps = {},
 }: AppProps & AppInitialProps) => {
-  const store = createStore()
-
   return (
     <context.Provider value={store}>
       <Layout>
