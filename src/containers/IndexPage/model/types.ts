@@ -14,6 +14,7 @@ export interface IAlbumTrack {
   name: string
   preview_url: string | null
   artists: IArtist[]
+  duration_ms: number
 }
 
 export interface IExtendedAlbumTracks extends IAlbumTrack {
