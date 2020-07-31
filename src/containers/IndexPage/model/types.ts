@@ -1,3 +1,25 @@
+export interface IArtist {
+  id: string
+  name: string
+}
+
+export interface IImage {
+  width: number
+  height: number
+  url: string
+}
+
+export interface IAlbumTrack {
+  id: string
+  name: string
+  preview_url: string | null
+  artists: IArtist[]
+}
+
+export interface IExtendedAlbumTracks extends IAlbumTrack {
+  images: IImage[]
+}
+
 export interface IAlbum {
   id: string
   artists: {
@@ -7,16 +29,10 @@ export interface IAlbum {
   total_tracks: number
   name: string
   label: string
-  images: {
-    width: number
-    height: number
-    url: string
-  }[]
+  images: IImage[]
   tracks: {
-    id: string
-    name: string
-    preview_url: string | null
-  }[]
+    items: IAlbumTrack[]
+  }
 }
 
 export interface IAlbums {

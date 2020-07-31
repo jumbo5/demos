@@ -1,70 +1,71 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useAction, useAtom } from '@reatom/react'
-import { changeTrack, trackAtom } from '@store'
-import { Button, Card } from 'antd'
+import { changeTrack, trackAtom, userAtom } from '@store'
+import { List } from 'antd'
 import { NextSeo } from 'next-seo'
 import styled from 'styled-components'
 
 import { albumsAtom, searchAlbums } from './model/IndexPage.model'
+import { IExtendedAlbumTracks } from './model/types'
 
 export const IndexPage = () => {
   const track = useAtom(trackAtom)
   const albumsResponse = useAtom(albumsAtom)
+  const user = useAtom(userAtom)
 
   const handleChangeTrack = useAction(changeTrack)
   const handlesearchAlbums = useAction(searchAlbums)
 
   useEffect(() => {
-    handlesearchAlbums()
-  }, [handlesearchAlbums])
+    handlesearchAlbums(user?.access_token)
+  }, [handlesearchAlbums, user])
+
+  const tracksWithPreview = useMemo(() => {
+    if (albumsResponse) {
+      return albumsResponse.albums.reduce(
+        (acc, album) => [
+          ...acc,
+          ...album.tracks.items
+            .filter((track) => track.preview_url)
+            .map((track) => ({ ...track, images: album.images })),
+        ],
+        [] as IExtendedAlbumTracks[],
+      )
+    }
+
+    return undefined
+  }, [albumsResponse])
 
   return (
     <>
       <NextSeo title="Demos" description="Demos" />
-      {albumsResponse && (
-        <CardsWrapper>
-          {albumsResponse.albums.map(({ id, images, name, artists }) => (
-            <StyledCard
-              key={id}
-              cover={
-                <CardCoverWrapper>
-                  <CardCover alt="playlist-cover" src={images[0].url} />
-                </CardCoverWrapper>
-              }
-            >
-              <Card.Meta title={name} description={artists[0].name} />
-            </StyledCard>
-          ))}
-        </CardsWrapper>
-      )}
+      <List
+        bordered
+        dataSource={tracksWithPreview}
+        renderItem={(item) => (
+          <StyledListItem
+            onClick={() =>
+              handleChangeTrack(
+                item.preview_url === track?.src
+                  ? {
+                      paused: !track.paused,
+                    }
+                  : {
+                      src: item.preview_url || '',
+                      paused: false,
+                      time: 0,
+                    },
+              )
+            }
+          >
+            <h1>{item.name}</h1>
+          </StyledListItem>
+        )}
+      />
     </>
   )
 }
 
-const StyledCard = styled(Card)`
-  max-width: 100%;
-  height: 100%;
-`
-
-const CardCoverWrapper = styled.div`
-  position: relative;
-  padding-top: 100%;
-  width: 100%;
-`
-
-const CardCover = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  object-fit: cover;
-  object-position: center;
-  width: 100%;
-  height: 100%;
-`
-
-const CardsWrapper = styled.div`
-  display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  width: 100%;
+const StyledListItem = styled(List.Item)`
+  cursor: pointer;
 `
