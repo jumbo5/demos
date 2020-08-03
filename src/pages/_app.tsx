@@ -1,6 +1,6 @@
 import React from 'react'
 import { context } from '@reatom/react'
-import { store } from '@store'
+import { store } from '@store/store'
 import { AppInitialProps, AppProps } from 'next/app'
 
 import { Layout } from '@app/containers'

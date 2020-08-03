@@ -1,5 +1,5 @@
 import { declareAction, declareAtom } from '@reatom/core'
-import { fetchUser, setUser, userAtom } from '@store'
+import { fetchUser, setUser } from '@store/user'
 
 import { albumsToSearch } from './constants'
 import { IAlbums } from './types'

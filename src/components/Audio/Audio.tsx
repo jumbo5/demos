@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Icon, {
+  FastBackwardOutlined,
+  FastForwardOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons'
@@ -26,6 +28,9 @@ export const Audio: React.FC<IProps> = ({
   onVolumeChange,
   onPausedChange,
   onMutedChange,
+  onEnded = () => {},
+  onNext,
+  onPrev,
 }) => {
   const ref = useRef<HTMLAudioElement>(null)
   const [duration, setDuration] = useState(0)
@@ -86,6 +91,10 @@ export const Audio: React.FC<IProps> = ({
   }
 
   const handleTimeChange = (target: HTMLAudioElement) => {
+    if (Math.trunc(currentTime) >= Math.trunc(duration)) {
+      onEnded(target)
+    }
+
     if (Math.trunc(currentTime) !== Math.trunc(target.currentTime)) {
       onTimeChange
         ? onTimeChange(target.currentTime)
@@ -125,12 +134,32 @@ export const Audio: React.FC<IProps> = ({
         onTimeUpdate={(e) => handleTimeChange(e.target as HTMLAudioElement)}
       />
 
-      <Button
-        type="ghost"
-        shape="circle"
-        icon={currentPaused ? <PlayCircleOutlined /> : <PauseCircleOutlined />}
-        onClick={handlePlay}
-      />
+      <PlayerControllers>
+        <Button
+          type="ghost"
+          shape="circle"
+          icon={<FastBackwardOutlined />}
+          onClick={onPrev}
+          disabled={!onPrev}
+        />
+
+        <Button
+          type="ghost"
+          shape="circle"
+          icon={
+            currentPaused ? <PlayCircleOutlined /> : <PauseCircleOutlined />
+          }
+          onClick={handlePlay}
+        />
+
+        <Button
+          type="ghost"
+          shape="circle"
+          icon={<FastForwardOutlined />}
+          onClick={onNext}
+          disabled={!onNext}
+        />
+      </PlayerControllers>
 
       <PlayerLine>
         <span>{formatTime(currentTime)}</span>
@@ -191,5 +220,10 @@ const SoundLine = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   align-items: center;
+`
+
+const PlayerControllers = styled.div`
+  display: grid;
+  grid-template-columns: min-content min-content min-content;
   gap: 0 8px;
 `
