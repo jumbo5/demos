@@ -16,8 +16,6 @@ const AudioContainer = () => {
   const handleChangeTrack = useAction(changeTrack)
   const handleRemoveFromQueue = useAction(removeFromQueue)
 
-  console.log(track)
-
   return (
     <Container>
       {track?.src && (
