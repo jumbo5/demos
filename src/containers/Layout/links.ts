@@ -1,6 +1,6 @@
 import {
   CopyOutlined,
-  FunctionOutlined,
+  DropboxOutlined,
   GithubOutlined,
   PictureOutlined,
 } from '@ant-design/icons'
@@ -22,8 +22,8 @@ export const menuLinks = [
     Icon: CopyOutlined,
   },
   {
-    link: '/generators',
-    text: 'Generators',
-    Icon: FunctionOutlined,
+    link: '/animations',
+    text: 'Animations',
+    Icon: DropboxOutlined,
   },
 ]

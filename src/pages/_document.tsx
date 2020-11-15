@@ -64,6 +64,8 @@ class AppDocument extends Document<Props> {
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
           />
+
+          <link href="/styles/antd.min.css" rel="stylesheet" />
         </Head>
         <body>
           <Main />
