@@ -1,7 +1,8 @@
 import React from 'react'
 import { animated, useSpring } from 'react-spring'
 
-import { animations, DEFAULT_DELAY, DEFAULT_DURATION } from './configs'
+import { animations } from './configs'
+import { DEFAULT_DELAY, DEFAULT_DURATION } from './constants'
 import { AnimationProps } from './types'
 
 export const Animation: React.FC<AnimationProps> = ({

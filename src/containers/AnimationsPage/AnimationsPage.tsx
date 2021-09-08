@@ -23,7 +23,7 @@ export const AnimationsPage = () => (
             from: { transform: 'rotate(720deg)', opacity: 0 },
             to: { transform: 'rotate(-720deg)', opacity: 1 },
           }}
-          config={{ duration: 2000 }}
+          config={{ duration: 1000 }}
         >
           <b>CUSTOM ANIMATION</b>
         </Animation>

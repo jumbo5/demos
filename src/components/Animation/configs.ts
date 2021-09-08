@@ -18,6 +18,3 @@ export const animations: { [key in animationTypes]: object } = {
     to: { transform: 'translateX(0%)', opacity: 1 },
   },
 }
-
-export const DEFAULT_DELAY = 0
-export const DEFAULT_DURATION = 400
